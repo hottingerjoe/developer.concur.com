@@ -32,9 +32,9 @@ Property Name|Type|Format|Description
 ---|---|---|---
 number|string|-|**Required** Ticket number issued by the airline when the payment is made. Ticket numbers are globally unique for all IATA carriers. The first 3 digits identify the airline. The three digit code for each airline can be found [here](http://www.iata.org/about/members/Pages/airline-list.aspx?All=true). For example the ticket number for American Airlines where 001 is the airline: 0012375432602.
 recordLocator|string|-|Confirmation identifier for the ticket created by the airline. For most airlines this is a 6 character alphanumeric code that is unique for a short period of time and could be reused in the future.
-issueDateTime|string|date-time|**Required** Date and time the ticket was issued.
+issueDateTime|string|[datetime](#format-datetime)|**Required** Date and time the ticket was issued.
 pseudoCityCode|string|[IATACityCode](#format-IATACityCode)|IATA city code the ticket was issued from. For example, SEA for Seattle.
-IATAAgencyNumber|string|^[0-9]{8}$|Identifying number assigned by the IATA to the agency issuing the ticket.
+IATAAgencyNumber|string|[IATAAgencyNumber](#format-IATAAgencyNumber)|Identifying number assigned by the IATA to the agency issuing the ticket.
 agencyName|string|-|Name of the agency issuing the ticket.
 passengerName|string|-|**Required** Name of the passenger associated with the ticket.
 coupons|array|[coupons](#coupons)|**Required** Flights issued within this transaction.
@@ -44,18 +44,18 @@ coupons|array|[coupons](#coupons)|**Required** Flights issued within this transa
 Property Name|Type|Format|Description
 ---|---|---|---
 originationAirportIATACode|string|[IATAAirportCode](#format-IATAAirportCode)|**Required** IATA airport code of the flight’s origin.
-originationDateTime|string|date-time|**Required** Date and time of origin.
+originationDateTime|string|[datetime](#format-datetime)|**Required** Date and time of origin.
 destinationAirportIATACode|string|[IATAAirportCode](#format-IATAAirportCode)|**Required** IATA airport code of the flight’s destination.
-destinationDateTime|string|date-time|**Required** Date and time of destination.
+destinationDateTime|string|[datetime](#format-datetime)|**Required** Date and time of destination.
 flightNumber|string|-|Flight identifier.
 couponNumber|string|[nonEmptyString](#format-nonEmptyString)|**Required** Identifier associated with the given coupon.
-operatingAirlineCode|string|^[a-zA-Z]{2}$|**Required** IATA code of the airline operating the flight.
-marketingCarrier|string|^[a-zA-Z0-9]{3,8}$|**Required** Flight designator booking the flight.
-operatingCarrier|string|^[a-zA-Z0-9]{3,8}$|**Required** Flight designator operating the flight.
-classOfServiceCode|string|^[a-zA-Z]$|**Required** Class of service per the airline’s class of service codes. Most airlines use the same codes but some airlines have custom codes.
-fareBasisCode|string|^[a-zA-Z0-9]{2,8}$|**Required** Rate code the airline used to calculate the fare for this flight.
-ticketDesignatorCode|string|^[a-zA-Z0-9\*?]{1,10}$|A valid ticket designator code to indicate what type of discount is applied, such as for a child or infant, or airline employee. This is a 1 to 10 alphanumeric code and can optionally include a single asterisk. Ticket designators are free-form text codes which help identify ticket types. Airlines determine which ticket designators they will use as no standards currently exist.
-fare|string|^[-]?\d*\.?\d+$|**Required** Fare charged for the flight.
+operatingAirlineCode|string|[IATAAirlineCode](#format-IATAAirlineCode)|**Required** IATA code of the airline operating the flight.
+marketingCarrier|string|[flightDesignator](#format-flightDesignator)|**Required** Flight designator booking the flight.
+operatingCarrier|string|[flightDesignator](#format-flightDesignator)|**Required** Flight designator operating the flight.
+classOfServiceCode|string|[classOfServiceCode](#format-classOfServiceCode)|**Required** Class of service per the airline’s class of service codes. Most airlines use the same codes but some airlines have custom codes.
+fareBasisCode|string|[fareBasisCode](#format-fareBasisCode)|**Required** Rate code the airline used to calculate the fare for this flight.
+ticketDesignatorCode|string|[ticketDesignatorCode](#format-ticketDesignatorCode)|A valid ticket designator code to indicate what type of discount is applied, such as for a child or infant, or airline employee. This is a 1 to 10 alphanumeric code and can optionally include a single asterisk. Ticket designators are free-form text codes which help identify ticket types. Airlines determine which ticket designators they will use as no standards currently exist.
+fare|string|[currency](#format-currency)|**Required** Fare charged for the flight.
 taxes|array|[Taxes](#taxes)|Schema for objects that make up an array of taxes. Used in most receipt types.
 lineItems|array|[lineItems](#line-item)|Line Items/fees specific to a leg of the trip. Eg. Baggage fees, class of service fees, priority boarding, meals.
 
@@ -63,14 +63,14 @@ lineItems|array|[lineItems](#line-item)|Line Items/fees specific to a leg of the
 
 Property Name|Type|Format|Description
 ---|---|---|---
-<a name="format-IATAAirportCode">IATAAirportCode|string|^[a-zA-Z]{3}$|3-letter IATA code for an airport.
-<a name="format-IATACityCode">IATACityCode|string|^[a-zA-Z]{3}$|3-letter IATA city code. For example, SEA for Seattle.
-IATAAirlineCode|string|^[a-zA-Z]{2}$|2-letter code for an airline.
-IATAAgencyNumber|string|^[0-9]{8}$|8-character ID number assigned by the IATA to an agency.
-flightDesignator|string|^[a-zA-Z0-9]{3,8}$|-
-classOfServiceCode|string|^[a-zA-Z]$|-
-fareBasisCode|string|^[a-zA-Z0-9]{2,8}$|-
-ticketDesignatorCode|string|^[a-zA-Z0-9\*?]{1,10}$|-
+<a name="format-IATAAirportCode"></a>IATAAirportCode|string|^[a-zA-Z]{3}$|3-letter IATA code for an airport.
+<a name="format-IATACityCode"></a>IATACityCode|string|^[a-zA-Z]{3}$|3-letter IATA city code. For example, SEA for Seattle.
+<a name="format-IATAAirlineCode"></a>IATAAirlineCode|string|^[a-zA-Z]{2}$|2-letter code for an airline.
+<a name="format-IATAAgencyNumber"></a>IATAAgencyNumber|string|^[0-9]{8}$|8-character ID number assigned by the IATA to an agency.
+<a name="format-flightDesignator"></a>flightDesignator|string|^[a-zA-Z0-9]{3,8}$|-
+<a name="format-classOfServiceCode"></a>classOfServiceCode|string|^[a-zA-Z]$|-
+<a name="format-fareBasisCode"></a>fareBasisCode|string|^[a-zA-Z0-9]{2,8}$|-
+<a name="format-ticketDesignatorCode"></a>ticketDesignatorCode|string|^[a-zA-Z0-9\*?]{1,10}$|-
 
 ## Car Rental Receipt
 
@@ -82,8 +82,8 @@ Property Name|Type|Format|Description
 ---|---|---|---
 itineraryLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of an itinerary (also know as a trip) in Concur’s Itinerary Service. An itinerary can contain one or more bookings from various sources.
 segmentLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of a single travel event in Concur’s Itinerary Service. An itinerary can contain one or more bookings and each booking can contain one or more segments. The segmentLocator uniquely identifies an event like a car rental with a specific start and end date or a single air segment/sector.
-startDateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
-endDateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
+startDateTime|string|[datetime](#format-datetime)|**Required**
+endDateTime|string|[datetime](#format-datetime)|**Required**
 pickupLocation|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 dropoffLocation|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 rentalDays|integer|-|**Required** Total number of days for which the car was rented.
@@ -103,17 +103,17 @@ Property Name|Type|Format|Description
 ---|---|---|---
 registrationNumber|string|-|Registration or license plate identifier.
 description|string|-|Vehicle description, including year, make and model.
-classReservedCode|string|^[a-zA-Z]{4}$|Four-letter Association of Car Rental Industry Systems Standard (ACRISS) car code.
-classRentedCode|string|^[a-zA-Z]{4}$|Actual vehicle rented ACRISS identifier.
-classChargedCode|string|^[a-zA-Z]{4}$|Car class code actually charged to the user.
-engineSize|string|^[0-9]{1,4}$|Engine displacement in cubic centimeters.
+classReservedCode|string|[acrissCarCode](#format-acrissCarCode)|Four-letter Association of Car Rental Industry Systems Standard (ACRISS) car code.
+classRentedCode|string|[acrissCarCode](#format-acrissCarCode)|Actual vehicle rented ACRISS identifier.
+classChargedCode|string|[acrissCarCode](#format-acrissCarCode)|Car class code actually charged to the user.
+engineSize|string|[engineSize](#format-engineSize)|Engine displacement in cubic centimeters.
 
 ### Definitions
 
 Property Name|Type|Format|Description
 ---|---|---|---
-acrissCarCode|string|^[a-zA-Z]{4}$|Four-letter Association of Car Rental Industry Systems Standard (ACRISS) car code.
-engineSize|string|^[0-9]{1,4}$|Engine displacement in cubic centimeters.
+<a name="format-acrissCarCode"></a>acrissCarCode|string|^[a-zA-Z]{4}$|Four-letter Association of Car Rental Industry Systems Standard (ACRISS) car code.
+<a name="format-engineSize"></a>engineSize|string|^[0-9]{1,4}$|Engine displacement in cubic centimeters.
 
 ## Common Definitions
 
@@ -121,18 +121,19 @@ Shared definitions that are utilized in multiple receipt types.
 
 Format Name|Type|Regex|Description
 ---|---|---|---
-dateTime|string|date-time|The dateTime validation validates for a subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; This is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.|
+<a name="format-datetime"></a>dateTime|string|-|The dateTime validation validates for a subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; This is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
 <a name="format-duration"></a>duration|string|`^(-)?P(?:(-?[0-9,.]*)Y)?(?:(-?[0-9,.]*)M)?(?:(-?[0-9,.]*)W)?(?:(-?[0-9,.]*)D)?(?:T(?:(-?[0-9,.]*)H)?(?:(-?[0-9,.]*)M)?(?:(-?[0-9,.]*)S)?)?$`|Duration of a time interval as defined in ISO 8601
 <a name="format-nonEmptyString"></a>nonEmptyString|string|`^(?!\s*$).+`|Non-empty string. Length must be at least 1 character.
+<a name="format-validString"></a>validString|string|`^[-]?\d*\.?\d+$`|A valid string
 addressRegion|string|`^[a-zA-Z0-9]{1,3}`$|1 to 3 character country subdivision code as defined in ISO 3166-2:2013
 addressCountry|string|country-code|2 or 3 character country code as defined in ISO 3166-1:2013
-currency|string|`^[-]?\d*\.?\d+$`|String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+<a name="format-currency"></a>currency|string|`^[-]?\d*\.?\d+$`|String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
 currencyCode|string|currency-code|3-letter currency code as defined in ISO 4217
 latitude|number|-|Numeric latitude value between -90 and 90
 longitude|number|-|Numeric longitude value between -180 and 180
 positiveInteger|integer|-|Positive integer value of at least 1
 positiveNumber|number|-|Positive number value of at least 0
-negativeCurrency|string|`^[-]\d*\.?\d+$`|String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+<a name="format-negativeCurrency"></a>negativeCurrency|string|`^[-]\d*\.?\d+$`|String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
 
 ### distance
 
@@ -150,7 +151,7 @@ Property Name|Type|Format|Description
 discountName|string|-|The name of the discount.
 discountCode|string|-|The code for the discount.
 discountRate|string|-|The percentage of discount provided.
-discountAmount|string|^[-]\d*\.?\d+$|String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+discountAmount|string|[negativeCurrency](#format-negativeCurrency)|String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
 
 ## General Receipt
 
@@ -173,14 +174,21 @@ Property Name|Type|Format|Description
 itineraryLocator|string|[nonEmptyString](#format-nonEmptyString)|Non-empty string. Length must be at least 1 character.
 segmentLocator|string|[nonEmptyString](#format-nonEmptyString)|Non-empty string. Length must be at least 1 character.
 classOfService|string|[nonEmptyString](#format-nonEmptyString)|Non-empty string. Length must be at least 1 character.
-startDateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
-endDateTime|string|date-time|A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
-travelDuration|string|`^(-)?P(?:(-?[0-9,.]*)Y)?(?:(-?[0-9,.]*)M)?(?:(-?[0-9,.]*)W)?(?:(-?[0-9,.]*)D)?(?:T(?:(-?[0-9,.]*)H)?(?:(-?[0-9,.]*)M)?(?:(-?[0-9,.]*)S)?)?$`|Duration of a time interval as defined in ISO 8601
+startDateTime|string|[datetime](#format-datetime)|**Required**
+endDateTime|string|[datetime](#format-datetime)|
+travelDuration|string|[duration](#format-duration)|Duration of a time interval as defined in ISO 8601
+mapUrl|string|[Google Maps URI Template](#format-googlemaps)|Link to an image of the traveled route.
 pickupLocation|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 dropoffLocation|object|[Location](#location)|Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 distance|object|[distance](#distance)|Object representing a distance.
 driverNumber|string|-|Unique identifier assigned by the ride company to a driver.
 lineItems|array|[lineItems](#line-item)|Descriptive breakdown of the fare charged. For example: base fare, distance travelled, discount and other add-ons.
+
+<a name="format-googlemaps"></a>Google Maps URI Template
+
+```
+^https://(www|maps).(googleapis|google).[a-z]+/maps/
+```
 
 ## Hotel Receipt
 
@@ -194,8 +202,8 @@ itineraryLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of an
 segmentLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of a single travel event in Concur’s Itinerary Service. An itinerary can contain one or more bookings and each booking can contain one or more segments. The segmentLocator uniquely identifies an event like a car rental with a specific start and end date or a single air segment/sector.
 property|object|[Location](#location)|Physical property location information for the hotel property. This is often different than the merchant location information.
 confirmationNumber|string|-|Booking identifier.
-checkInDateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
-checkOutDateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
+checkInDateTime|string|[datetime](#format-datetime)|**Required**
+checkOutDateTime|string|[datetime](#format-datetime)|**Required**
 guests|array|[guests](#guests)|**Required** Guest information.
 numberInParty|integer|-|Number of individuals for the stay.
 room|object|[room](#room)|**Required**
@@ -232,7 +240,7 @@ Property Name|Type|Format|Description
 roomNumber|string|-|Room number where the guest stayed.
 roomType|string|-|Type of room where the guest stayed. For example, Standard, Deluxe, etc.
 ratePlanType|string|-|Name of the rate plan according to which the guest was charged.
-averageDailyRoomRate|string|^[-]?\d*\.?\d+$|**Required** Average of the daily room rates for the duration of the guests stay. Room rates usually differ from day to day.
+averageDailyRoomRate|string|[validString](#format-validString)|**Required** Average of the daily room rates for the duration of the guests stay. Room rates usually differ from day to day.
 
 ## Japan Public Transportation (JPT) IC Card Definitions
 
@@ -242,10 +250,10 @@ Property Name|Type|Format|Description
 ---|---|---|---
 user|string|-|**Required**
 app|string|-|**Required**
-dateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
-total|string|^[-]?\d*\.?\d+$|**Required** String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
-subtotal|string|^[-]?\d*\.?\d+$|String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
-taxesTotal|string|^[-]?\d*\.?\d+$|String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+dateTime|string|[datetime](#format-datetime)|**Required**
+total|string|[validString](#format-validString)|**Required** -
+subtotal|string|[validString](#format-validString)|-
+taxesTotal|string|[validString](#format-validString)|-
 currencyCode|string|currency-code|**Required** 3-letter currency code as defined in ISO 4217
 merchant|object|[merchant](#merchant)|**Required**
 payments|array|[Payments](#payments)|**Required**
@@ -261,7 +269,7 @@ segments|array|[segments](#segments)|**Required** The segments for the trip.
 Property Name|Type|Format|Description
 ---|---|---|---
 sequenceNumber|integer|-|**Required** Unique transaction identifier for every trip taken using the IC card.
-dateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
+dateTime|string|[datetime](#format-datetime)|**Required**
 fromStationCode|string|-|**Required** Departure station code of the route. This code is specified to the IC Card vendor. Concur Expense has a transcoding table to Expense location codes.
 fromStationName|string|-|**Required** Departure station label of the route.
 toStationCode|string|-|**Required** Arrival station code of the route. This code is specified to the IC Card vendor. Concur Expense has a transcoding table to Expense location codes.
@@ -275,7 +283,7 @@ distance|number|-|Positive number value of at least value as 0
 Property Name|Type|Format|Description
 ---|---|---|---
 sequenceNumber|integer|-|**Required** Unique transaction identifier for every trip taken using the IC card.
-dateTime|string|date-time|**Required** Transaction date and time.
+dateTime|string|[datetime](#format-datetime)|**Required** Transaction date and time.
 fromStationCode|string|-|**Required** Departure station code of the route. This code is specified to the IC Card vendor. Concur Expense has a transcoding table to Expense location codes.
 fromStationName|string|-|**Required** Departure station label of the route.
 toStationCode|string|-|**Required** Arrival station code of the route. This code is specified to the IC Card vendor. Concur Expense has a transcoding table to Expense location codes.
@@ -291,16 +299,16 @@ Generic line item. These objects are included in arrays in most receipt types.
 Property Name|Type|Format|Description
 ---|---|---|---
 sequenceNumber|integer|-|**Required** The order in which the item appears in the sequence of line items when the receipt is rendered by Concur.
-dateTime|string|date-time|A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
+dateTime|string|[datetime](#format-datetime)|-
 reference|string|-|The item SKU, identifier or some other attribute the merchant uses to reference the item.
 description|string|[nonEmptyString](#format-nonEmptyString)|**Required** Non-empty string. Length must be at least 1 character.
 additionalDescription|string|-|-
 semanticsCode|string|[nonEmptyString](#format-nonEmptyString)|The [Concur semantics code](https://developer.concur.com/api-reference/travel/itinerary/itinerary.html#semantics_codes) for the line item.
-unitCost|string|^[-]?\d*\.?\d+$|Amount per unit.
+unitCost|string|[currency](#format-currency)|Amount per unit.
 quantity|integer|-|-
-total|string|^[-]?\d*\.?\d+$|**Required** String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
-subtotal|string|^[-]?\d*\.?\d+$|String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
-taxesTotal|string|^[-]?\d*\.?\d+$|String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+total|string|[currency](#format-currency)|**Required** -
+subtotal|string|[currency](#format-currency)|-
+taxesTotal|string|[currency](#format-currency)|-
 taxes|array|[Taxes](#taxes)|Schema for objects that make up an array of taxes. Used in most receipt types.
 vatApplicable|boolean|-|If the line item was subject to a value added tax then true, if not then false.
 amountIncludesVat|boolean|-|-
@@ -341,13 +349,13 @@ The payments array allows for one or more payment methods used in the transactio
 
 Property Name|Type|Format|Description
 ---|---|---|---
-amount|string|^[-]?\d*\.?\d+$|**Required** String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+amount|string|[currency](#format-currency)|**Required** -
 
 #### creditCard
 
 Property Name|Type|Format|Description
 ---|---|---|---
-amount|string|^[-]?\d*\.?\d+$|**Required** String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+amount|string|[currency](#format-currency)|**Required** -
 cardDetail|object|[cardDetail](#cardDetail)|**Required** Credit card information.
 
 #### cardDetail
@@ -363,7 +371,7 @@ authorizationCode|string|-|Authorization code for transaction.
 Property Name|Type|Format|Description
 ---|---|---|---
 source|-|-|**Required** Can be any of the following values: GhostCard, LodgeCard, DirectPay, Invoice
-amount|string|^[-]?\d*\.?\d+$|**Required** String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+amount|string|[currency](#format-currency)|**Required** -
 cardDetail|object|[cardDetail](#cardDetail)|Credit card information.
 
 #### cardDetail
@@ -379,14 +387,14 @@ authorizationCode|string|-|Authorization code for transaction.
 Property Name|Type|Format|Description
 ---|---|---|---
 source|-|-|**Required** Can be any of the following values: ApplePay, AndroidPay, SamsungPay, PayPal, OlaMoney
-amount|string|^[-]?\d*\.?\d+$|**Required** String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+amount|string|[currency](#format-currency)|**Required** -
 
 #### unusedTicket
 
 Property Name|Type|Format|Description
 ---|---|---|---
 ticketNumber|string|[nonEmptyString](#format-nonEmptyString)|**Required** Non-empty string. Length must be at least 1 character.
-amount|string|^[-]?\d*\.?\d+$|**Required** String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+amount|string|[currency](#format-currency)|**Required** -
 
 #### cardDetail
 
@@ -414,9 +422,9 @@ Property Name|Type|Format|Description
 ---|---|---|---
 ticketNumber|string|-|-
 recordLocator|string|-|**Required** Confirmation identifier for the ticket. This code is usually unique for a short period of time and could be reused by the rail company in the future.
-issueDateTime|string|date-time|**Required** Date and time the ticket was issued.
+issueDateTime|string|[datetime](#format-datetime)|**Required** Date and time the ticket was issued.
 passengerName|string|-|**Required** Name of the person associated withthe ticket.
-fare|string|^[-]?\d*\.?\d+$|Fare charged for a train ticket. This will be the total of all segments in this train ticket.
+fare|string|[currency](#format-currency)|Fare charged for a train ticket. This will be the total of all segments in this train ticket.
 segments|array|[segments](#segments)|**Required** Segments for this train ticket.
 
 ### segments
@@ -424,13 +432,13 @@ segments|array|[segments](#segments)|**Required** Segments for this train ticket
 Property Name|Type|Format|Description
 ---|---|---|---
 departureStation|string|-|**Required** Name of the station from which the train is departing.
-departureDateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
+departureDateTime|string|[datetime](#format-datetime)|**Required**
 arrivalStation|string|-|**Required** Name of the station where the train is arriving.
-arrivalDateTime|string|date-time|**Required** A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z* notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.
+arrivalDateTime|string|[datetime](#format-datetime)|**Required**
 trainNumber|string|-|**Required** Train identifier
 trainType|string|-|Type of train. For example TGV or TER in France.
 classOfServiceCode|string|[nonEmptyString](#format-nonEmptyString)|**Required** The class of travel.
-fare|string|^[-]?\d*\.?\d+$|Fare charged for this segment of the train ride.
+fare|string|[currency](#format-currency)|Fare charged for this segment of the train ride.
 taxes|array|[Taxes](#taxes)|Taxes paid for this segment.
 lineItems|array|[lineItems](#line-item)|Line items specific to this segment. This could include meals, seat reservations, insurance etc.
 
@@ -440,11 +448,11 @@ Core values for all receipt types. All major receipt schemas include these core 
 
 Property Name|Type|Format|Description
 ---|---|---|---
-dateTime|string|date-time|**Required** Date and time of the transaction.
-total|string|^[-]?\d*\.?\d+$|**Required** The total amount of the transaction including all lineitems and taxes.
-subtotal|string|^[-]?\d*\.?\d+$|The amount in the transaction excluding taxes.
-taxesTotal|string|^[-]?\d*\.?\d+$|The amount of tax paid in the transaction.
-discountsTotal|string|^[-]\d*\.?\d+$|String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+dateTime|string|[datetime](#format-datetime)|**Required** Date and time of the transaction.
+total|string|[currency](#format-currency)|**Required** The total amount of the transaction including all lineitems and taxes.
+subtotal|string|[currency](#format-currency)|The amount in the transaction excluding taxes.
+taxesTotal|string|[currency](#format-currency)|The amount of tax paid in the transaction.
+discountsTotal|string|[negativeCurrency](#format-negativeCurrency)|String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
 currencyCode|string|currency-code|**Required** Currency paid to the merchant.
 broker|object|[Merchant](#merchant)|The entity that facilitates the transaction between the seller and end user.
 seller|object|[Merchant](#merchant)|**Required** The entity providing service to the end user.
@@ -508,7 +516,7 @@ authority|object|[authority](#authority)|**Required** The country or subdivision
 name|string|-|-
 rate|number|-|**Required**
 rateType|string|-|The rate type for the tax charged. For value added tax this could be Zero, Standard, Reduced, etc.
-amount|string|^[-]?\d*\.?\d+$|**Required** String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
+amount|string|[currency](#format-currency)|**Required** -
 
 ### authority
 
