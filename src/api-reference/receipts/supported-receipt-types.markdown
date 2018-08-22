@@ -49,13 +49,13 @@ See the schema documentation below for the specifications of each type, plus the
 
 Schema for airline receipts.
 
-* Includes all of [Receipt Core Definitions](#receipt-core-definitions)
+* Includes all of [Receipt Core](#receipt-core)
 
 Property Name|Type|Format|Description
 ---|---|---|---
 itineraryLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of an itinerary (also know as a trip) in Concur’s Itinerary Service. An itinerary can contain one or more bookings from various sources.
-tickets|array|[tickets](#tickets)|Air tickets issued.
-lineItems|array|[lineItems](#line-item)|Ancillary airline fees.
+tickets|array|[tickets](#receipt-air-tickets)|Air tickets issued.
+lineItems|array|[lineItem](#receipt-shared-line-item)|Ancillary airline fees.
 
 ### <a name="receipt-air-tickets"></a>tickets
 
@@ -68,7 +68,7 @@ pseudoCityCode|string|[IATACityCode](#format-IATACityCode)|IATA city code the ti
 IATAAgencyNumber|string|[IATAAgencyNumber](#format-IATAAgencyNumber)|Identifying number assigned by the IATA to the agency issuing the ticket.
 agencyName|string|-|Name of the agency issuing the ticket.
 passengerName|string|-|**Required** Name of the passenger associated with the ticket.
-coupons|array|[coupons](#coupons)|**Required** Flights issued within this transaction.
+coupons|array|[coupons](#receipt-air-coupons)|**Required** Flights issued within this transaction.
 
 ### <a name="receipt-air-coupons"></a>coupons
 
@@ -87,8 +87,8 @@ classOfServiceCode|string|[classOfServiceCode](#format-classOfServiceCode)|**Req
 fareBasisCode|string|[fareBasisCode](#format-fareBasisCode)|**Required** Rate code the airline used to calculate the fare for this flight.
 ticketDesignatorCode|string|[ticketDesignatorCode](#format-ticketDesignatorCode)|A valid ticket designator code to indicate what type of discount is applied, such as for a child or infant, or airline employee. This is a 1 to 10 alphanumeric code and can optionally include a single asterisk. Ticket designators are free-form text codes which help identify ticket types. Airlines determine which ticket designators they will use as no standards currently exist.
 fare|string|[currency](#format-currency)|**Required** Fare charged for the flight.
-taxes|array|[Taxes](#taxes)|Schema for objects that make up an array of taxes. Used in most receipt types.
-lineItems|array|[lineItems](#line-item)|Line Items/fees specific to a leg of the trip. Eg. Baggage fees, class of service fees, priority boarding, meals.
+taxes|array|[Taxes](#receipt-shared-taxes)|Schema for objects that make up an array of taxes. Used in most receipt types.
+lineItems|array|[lineItem](#receipt-shared-line-item)|Line Items/fees specific to a leg of the trip. Eg. Baggage fees, class of service fees, priority boarding, meals.
 
 ### <a name="receipt-air-definitions"></a>Definitions
 
@@ -107,7 +107,7 @@ Property Name|Type|Format|Description
 
 Schema for car rentals. This does not include ride services or taxis.
 
-* Includes all of [Receipt Core Definitions](#receipt-core-definitions)
+* Includes all of [Receipt Core](#receipt-core)
 
 Property Name|Type|Format|Description
 ---|---|---|---
@@ -115,18 +115,18 @@ itineraryLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of an
 segmentLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of a single travel event in Concur’s Itinerary Service. An itinerary can contain one or more bookings and each booking can contain one or more segments. The segmentLocator uniquely identifies an event like a car rental with a specific start and end date or a single air segment/sector.
 startDateTime|string|[datetime](#format-datetime)|**Required**
 endDateTime|string|[datetime](#format-datetime)|**Required**
-pickupLocation|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
-dropoffLocation|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
+pickupLocation|object|[Location](#receipt-shared-location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
+dropoffLocation|object|[Location](#receipt-shared-location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 rentalDays|integer|-|**Required** Total number of days for which the car was rented.
 rentalAgreementNumber|string|-|Agreement identifier.
 confirmationNumber|string|-|Booking confirmation identifier.
-vehicle|object|[vehicle](#vehicle)|-
+vehicle|object|[vehicle](#receipt-car-rental-vehicle)|-
 driverName|string|-|Name of the driver/renter of the vehicle.
-distance|object|[distance](#distance)|Distance traveled.
+distance|object|[distance](#receipt-car-rental-distance)|Distance traveled.
 odometerReadingOut|number|-|Odometer reading at the start of the rental period. A number with up to one decimal place is expected.
 odometerReadingIn|number|-|Odometer reading at the end of the rental period. A number with up to one decimal place is expected.
 additionalDriver|boolean|-|Additional approved driver (true) or not (false).
-lineItems|array|[lineItems](#line-item)|Break down of all car rental charges. This could include daily rate, fees, insurance, GPS rental and other add-ons.
+lineItems|array|[lineItem](#receipt-shared-line-item)|Break down of all car rental charges. This could include daily rate, fees, insurance, GPS rental and other add-ons.
 
 ### <a name="receipt-car-rental-vehicle"></a>vehicle
 
@@ -157,17 +157,17 @@ Property Name|Type|Format|Description
 
 General receipt type for transactions that do not fall under one of the more specific receipt types. This might include retail stores or restaurants.
 
-* Includes all of [Receipt Core Definitions](#receipt-core-definitions)
+* Includes all of [Receipt Core](#receipt-core)
 
 Property Name|Type|Format|Description
 ---|---|---|---
-lineItems|array|[lineItems](#line-item)|Line items specified for general receipts.
+lineItems|array|[lineItem](#receipt-shared-line-item)|Line items specified for general receipts.
 
 ## <a name="receipt-ground-transport"></a>Ground Transport
 
 Schema for ground transportation receipts. This includes essentially all forms of non-aerial transportation, _except_ those that run on railed tracks.
 
-* Includes all of [Receipt Core Definitions](#receipt-core-definitions)
+* Includes all of [Receipt Core](#receipt-core)
 
 Property Name|Type|Format|Description
 ---|---|---|---
@@ -175,16 +175,16 @@ itineraryLocator|string|[nonEmptyString](#format-nonEmptyString)|Non-empty strin
 segmentLocator|string|[nonEmptyString](#format-nonEmptyString)|Non-empty string. Length must be at least 1 character.
 classOfService|string|[nonEmptyString](#format-nonEmptyString)|Non-empty string. Length must be at least 1 character.
 startDateTime|string|[datetime](#format-datetime)|**Required**
-endDateTime|string|[datetime](#format-datetime)|
+endDateTime|string|[datetime](#format-datetime)|-
 travelDuration|string|[duration](#format-duration)|Duration of a time interval as defined in ISO 8601
 mapUrl|string|[Google Maps URI Template](#format-googlemaps)|Link to an image of the traveled route.
-pickupLocation|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
-dropoffLocation|object|[Location](#location)|Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
+pickupLocation|object|[Location](#receipt-shared-location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
+dropoffLocation|object|[Location](#receipt-shared-location)|Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 distance|object|[distance](#distance)|Object representing a distance.
 driverNumber|string|-|Unique identifier assigned by the ride company to a driver.
-lineItems|array|[lineItems](#line-item)|Descriptive breakdown of the fare charged. For example: base fare, distance travelled, discount and other add-ons.
+lineItems|array|[lineItem](#receipt-shared-line-item)|Descriptive breakdown of the fare charged. For example: base fare, distance travelled, discount and other add-ons.
 
-<a name="format-googlemaps"></a>Google Maps URI Template
+<a name="format-googlemaps"></a>**Google Maps URI Template**
 
 ```
 ^https://(www|maps).(googleapis|google).[a-z]+/maps/
@@ -194,21 +194,21 @@ lineItems|array|[lineItems](#line-item)|Descriptive breakdown of the fare charge
 
 Schema for hotel receipts.
 
-* Includes all of [Receipt Core Definitions](#receipt-core-definitions)
+* Includes all of [Receipt Core](#receipt-core)
 
 Property Name|Type|Format|Description
 ---|---|---|---
 itineraryLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of an itinerary (also know as a trip) in Concur’s Itinerary Service. An itinerary can contain one or more bookings from various sources.
 segmentLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of a single travel event in Concur’s Itinerary Service. An itinerary can contain one or more bookings and each booking can contain one or more segments. The segmentLocator uniquely identifies an event like a car rental with a specific start and end date or a single air segment/sector.
-property|object|[Location](#location)|Physical property location information for the hotel property. This is often different than the merchant location information.
+property|object|[Location](#receipt-shared-location)|Physical property location information for the hotel property. This is often different than the merchant location information.
 confirmationNumber|string|-|Booking identifier.
 checkInDateTime|string|[datetime](#format-datetime)|**Required**
 checkOutDateTime|string|[datetime](#format-datetime)|**Required**
-guests|array|[guests](#guests)|**Required** Guest information.
+guests|array|[guests](#receipt-hotel-guests)|**Required** Guest information.
 numberInParty|integer|-|Number of individuals for the stay.
-room|object|[room](#room)|**Required**
+room|object|[room](#receipt-hotel-roomm)|**Required**
 nightsStayed|integer|-|**Required** Positive integer value of at least 1
-lineItems|array|[lineItems](#line-item)|**Required**
+lineItems|array|[lineItem](#receipt-shared-line-item)|**Required**
 
 ### <a name="receipt-hotel-guests"></a>guests
 
@@ -217,7 +217,7 @@ Property Name|Type|Format|Description
 guestNameRecord|string|-|The loyalty or membership number of the hotel guest.
 firstName|string|[nonEmptyString](#format-nonEmptyString)|**Required** Non-empty string. Length must be at least 1 character.
 lastName|string|[nonEmptyString](#format-nonEmptyString)|**Required** Non-empty string. Length must be at least 1 character.
-address|object|[Address](#address)|Address of the guest. It is highly recommended that the business address of the guest is provided if the hotel is provided with one. Doing so will help VAT reclamation partners who work with companies, to have compliant receipts accepted by the tax authority when filing tax reclaims.
+address|object|[Address](#receipt-shared-address)|Address of the guest. It is highly recommended that the business address of the guest is provided if the hotel is provided with one. Doing so will help VAT reclamation partners who work with companies, to have compliant receipts accepted by the tax authority when filing tax reclaims.
 
 ### <a name="receipt-hotel-property"></a>property
 
@@ -231,7 +231,7 @@ internetAddress|string|-|-
 emailAddress|string|-|-
 telephoneNumber|string|-|-
 faxNumber|string|-|-
-address|object|[Address](#address)|**Required** Common address object used by all receipt types except for the JPT IC Card receipt, which uses [Address-Original](#address-original).
+address|object|[Address](#receipt-shared-address)|**Required** Common address object used by all receipt types except for the JPT IC Card receipt, which uses [Address-Original](#receipt-shared-address-original).
 
 ### <a name="receipt-hotel-room"></a>room
 
@@ -246,13 +246,13 @@ averageDailyRoomRate|string|[validString](#format-validString)|**Required** Aver
 
 Schema for rail or train receipts.
 
-* Includes all of [Receipt Core Definitions](#receipt-core-definitions)
+* Includes all of [Receipt Core](#receipt-core)
 
 Property Name|Type|Format|Description
 ---|---|---|---
 itineraryLocator|string|[nonEmptyString](#format-nonEmptyString)|Unique ID of an itinerary (also know as a trip) in Concur’s Itinerary Service. An itinerary can contain one or more bookings from various sources.
-lineItems|array|[lineItems](#line-item)|Break down of all charges which could include insurance purchased for all train tickets, paid wi-fi etc.
-railTickets|array|[railTickets](#railtickets)|**Required**
+lineItems|array|[lineItem](#receipt-shared-line-item)|Break down of all charges which could include insurance purchased for all train tickets, paid wi-fi etc.
+railTickets|array|[railTickets](#receipt-rail-tickets)|**Required**
 
 ### <a name="receipt-rail-tickets"></a>railTickets
 
@@ -263,7 +263,7 @@ recordLocator|string|-|**Required** Confirmation identifier for the ticket. This
 issueDateTime|string|[datetime](#format-datetime)|**Required** Date and time the ticket was issued.
 passengerName|string|-|**Required** Name of the person associated withthe ticket.
 fare|string|[currency](#format-currency)|Fare charged for a train ticket. This will be the total of all segments in this train ticket.
-segments|array|[segments](#segments)|**Required** Segments for this train ticket.
+segments|array|[segments](#receipt-rail-segments)|**Required** Segments for this train ticket.
 
 ### <a name="receipt-rail-segments"></a>segments
 
@@ -277,8 +277,8 @@ trainNumber|string|-|**Required** Train identifier
 trainType|string|-|Type of train. For example TGV or TER in France.
 classOfServiceCode|string|[nonEmptyString](#format-nonEmptyString)|**Required** The class of travel.
 fare|string|[currency](#format-currency)|Fare charged for this segment of the train ride.
-taxes|array|[Taxes](#taxes)|Taxes paid for this segment.
-lineItems|array|[lineItems](#line-item)|Line items specific to this segment. This could include meals, seat reservations, insurance etc.
+taxes|array|[Taxes](#receipt-shared-taxes)|Taxes paid for this segment.
+lineItems|array|[lineItem](#receipt-shared-line-item)|Line items specific to this segment. This could include meals, seat reservations, insurance etc.
 
 ## <a name="receipt-jpt-ic"></a>Japan Public Transportation (JPT) IC Card
 
@@ -293,9 +293,9 @@ total|string|[validString](#format-validString)|**Required** -
 subtotal|string|[validString](#format-validString)|-
 taxesTotal|string|[validString](#format-validString)|-
 currencyCode|string|currency-code|**Required** 3-letter currency code as defined in ISO 4217
-merchant|object|[merchant](#merchant)|**Required**
-payments|array|[Payments](#payments)|**Required**
-taxes|array|[Taxes](#taxes)|Schema for objects that make up an array of taxes. Used in most receipt types.
+merchant|object|[merchant](#receipt-shared-merchant)|**Required**
+payments|array|[Payments](#receipt-shared-payments)|**Required**
+taxes|array|[Taxes](#receipt-shared-taxes)|Schema for objects that make up an array of taxes. Used in most receipt types.
 reference|string|-|-
 collectionReference|string|-|-
 taxInvoice|boolean|-|-
@@ -328,11 +328,11 @@ subtotal|string|[currency](#format-currency)|The amount in the transaction exclu
 taxesTotal|string|[currency](#format-currency)|The amount of tax paid in the transaction.
 discountsTotal|string|[negativeCurrency](#format-negativeCurrency)|String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.
 currencyCode|string|currency-code|**Required** Currency paid to the merchant.
-broker|object|[Merchant](#merchant)|The entity that facilitates the transaction between the seller and end user.
-seller|object|[Merchant](#merchant)|**Required** The entity providing service to the end user.
-payments|array|[Payments](#payments)|**Required**
-discounts|array|[discounts](#discount)|The discounts offered on this transaction.
-taxes|array|[Taxes](#taxes)|Taxes paid as part of transaction.
+broker|object|[Merchant](#receipt-shared-merchant)|The entity that facilitates the transaction between the seller and end user.
+seller|object|[Merchant](#receipt-shared-merchant)|**Required** The entity providing service to the end user.
+payments|array|[Payments](#receipt-shared-payments)|**Required**
+discounts|array|[discounts](#receipt-shared-discount)|The discounts offered on this transaction.
+taxes|array|[Taxes](#receipt-shared-taxes)|Taxes paid as part of transaction.
 reference|string|-|The unique receipt provider or merchant identifier for this receipt or invoice. This value can also be referred to as transaction number, check number, order ID or similar.
 collectionReference|string|-|Use this key to group related receipts into a collection for credits, tips or other adjustments to the original transaction and looking at groups of receipts for analysis purposes. The reference and collectionReference keys typically have separate and unique values but could be the same for the first receipt in a collection.
 taxInvoice|boolean|-|A tax invoice (true) or otherwise (false).
@@ -358,10 +358,10 @@ quantity|integer|-|-
 total|string|[currency](#format-currency)|**Required** -
 subtotal|string|[currency](#format-currency)|-
 taxesTotal|string|[currency](#format-currency)|-
-taxes|array|[Taxes](#taxes)|Schema for objects that make up an array of taxes. Used in most receipt types.
+taxes|array|[Taxes](#receipt-shared-taxes)|Schema for objects that make up an array of taxes. Used in most receipt types.
 vatApplicable|boolean|-|If the line item was subject to a value added tax then true, if not then false.
 amountIncludesVat|boolean|-|-
-discounts|array|[discounts](#discount)|The discounts offered for this line item.
+discounts|array|[discounts](#receipt-shared-discount)|The discounts offered for this line item.
 
 ### <a name="receipt-shared-location"></a>Location
 
@@ -377,7 +377,7 @@ internetAddress|string|-|-
 emailAddress|string|-|-
 telephoneNumber|string|-|-
 faxNumber|string|-|-
-address|object|[Address](#address)|**Required** Common address object used by all receipt types except for the JPT IC Card receipt, which uses [Address-Original](#address-original).
+address|object|[Address](#receipt-shared-address)|**Required** Common address object used by all receipt types except for the JPT IC Card receipt, which uses [Address-Original](#receipt-shared-address-original).
 
 ### <a name="receipt-shared-merchant"></a>Merchant
 
@@ -388,7 +388,7 @@ Property Name|Type|Format|Description
 name|string|[nonEmptyString](#format-nonEmptyString)|**Required** Non-empty string. Length must be at least 1 character.
 description|string|-|Description of the service provided by the merchant.
 taxId|string|-|The tax identification number assigned to the merchant by the national tax authority. If the partner is providing a tax invoice, then providing a tax identification number is recommended.
-location|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
+location|object|[Location](#receipt-shared-location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 
 ### <a name="receipt-shared-payments"></a>Payments
 
@@ -405,7 +405,7 @@ amount|string|[currency](#format-currency)|**Required** -
 Property Name|Type|Format|Description
 ---|---|---|---
 amount|string|[currency](#format-currency)|**Required** -
-cardDetail|object|[cardDetail](#cardDetail)|**Required** Credit card information.
+cardDetail|object|[cardDetail](#receipt-shared-payments-card-detail)|**Required** Credit card information.
 
 #### <a name="receipt-shared-payments-company-paid"></a>companyPaid
 
@@ -413,7 +413,7 @@ Property Name|Type|Format|Description
 ---|---|---|---
 source|-|-|**Required** Can be any of the following values: GhostCard, LodgeCard, DirectPay, Invoice
 amount|string|[currency](#format-currency)|**Required** -
-cardDetail|object|[cardDetail](#cardDetail)|Credit card information.
+cardDetail|object|[cardDetail](#receipt-shared-payments-card-detail)|Credit card information.
 
 #### <a name="receipt-shared-payments-digital-wallet"></a>digitalWallet
 
@@ -439,7 +439,7 @@ authorizationCode|string|-|Authorization code for transaction.
 
 ### <a name="receipt-shared-address"></a>Address
 
-Common address object used by all receipt types except for the JPT IC Card receipt, which uses [Address-Original](#address-original).
+Common address object used by all receipt types except for the JPT IC Card receipt, which uses [Address-Original](#receipt-shared-address-original).
 
 Property Name|Type|Format|Description
 ---|---|---|---
@@ -449,7 +449,7 @@ addressRegion|string|^[a-zA-Z0-9]{1,3}$|1 to 3 character country subdivision cod
 addressCountry|string|country-code|**Required** 2 or 3 character country code as defined in ISO 3166-1:2013
 postalCode|string|-|-
 
-### <a name="receipt-shared-address-original"></a>Address-Original (JPY Only)
+### <a name="receipt-shared-address-original"></a>Address-Original (JPT Only)
 
 Postal address schema used for JPT (Japan Public Transportation) receipts _only_.
 
@@ -469,7 +469,7 @@ Property Name|Type|Format|Description
 name|string|[nonEmptyString](#format-nonEmptyString)|**Required** Non-empty string. Length must be at least 1 character.
 description|string|-|Description of the service provided by the merchant.
 taxId|string|-|The tax identification number assigned to the merchant by the national tax authority. If the partner is providing a tax invoice, then providing a tax identification number is recommended.
-location|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
+location|object|[Location](#receipt-shared-location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 
 ### <a name="receipt-shared-seller"></a>seller
 
@@ -478,7 +478,7 @@ Property Name|Type|Format|Description
 name|string|[nonEmptyString](#format-nonEmptyString)|**Required** Non-empty string. Length must be at least 1 character.
 description|string|-|Description of the service provided by the merchant.
 taxId|string|-|The tax identification number assigned to the merchant by the national tax authority. If the partner is providing a tax invoice, then providing a tax identification number is recommended.
-location|object|[Location](#location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
+location|object|[Location](#receipt-shared-location)|**Required** Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.
 
 ### <a name="receipt-shared-taxes"></a>taxes
 
@@ -486,7 +486,7 @@ Schema for objects that make up an array of taxes. Used in most receipt types.
 
 Property Name|Type|Format|Description
 ---|---|---|---
-authority|object|[authority](#authority)|**Required** The country or subdivision that charged the tax as per ISO 3166-2:2013.
+authority|object|[authority](#receipt-shared-authority)|**Required** The country or subdivision that charged the tax as per ISO 3166-2:2013.
 name|string|-|-
 rate|number|-|**Required**
 rateType|string|-|The rate type for the tax charged. For value added tax this could be Zero, Standard, Reduced, etc.

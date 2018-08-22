@@ -1,59 +1,47 @@
 ---
-title: Endpoints
+title: Receipt v4 - Endpoints
 layout: reference
 ---
 
-# Endpoints
+* [Definitions of Resources](#definitions-of-resources)
+* [General](#general)
+  * [GET Service Index](#endpoint-service-index)
+  * [GET Receipt Status by Receipt ID](#endpoint-get-receipt-status)
+* [eReceipts](#ereceipts)
+  * [GET Schemas](#endpoint-schemas)
+  * [POST Receipts](#endpoint-post-a-receipt)
+  * [GET Receipts by User ID](#endpoint-get-receipts-by-userid)
+  * [GET Receipts by Receipt ID](#endpoint-get-a-receipt-by-id)
+  * [GET Receipt Image by Receipt ID](#endpoint-get-receipt-image)
+* [Image-Only Receipts](#image-only-receipts)
+  * [POST Image-Only Receipts](#endpoint-post-an-image-only-receipt)
+  * [GET Image-Only Receipts by User ID](#endpoint-get-image-only-receipts-by-userid)
+  * [GET Image-Only Receipt by Receipt ID](#endpoint-get-an-image-only-receipt-by-id)
+  * [GET Receipt Image by Receipt ID](#endpoint-get-receipt-image-image-only)
 
-- [Definitions of Resources](#definitions-of-resources)
-- [General](#general)
-  - [GET Service Index](#endpoint-service-index)
-  - [GET Receipt Status by Receipt ID](#endpoint-get-receipt-status)
-- [eReceipts](#ereceipts)
-  - [GET Schemas](#endpoint-schemas)
-  - [POST Receipts](#endpoint-post-a-receipt)
-  - [GET Receipts by User ID](#endpoint-get-receipts-by-userid)
-  - [GET Receipts by Receipt ID](#endpoint-get-a-receipt-by-id)
-  - [GET Receipt Image by Receipt ID](#endpoint-get-receipt-image)
-- [Image-Only Receipts](#image-only-receipts)
-  - [POST Image-Only Receipts](#endpoint-post-an-image-only-receipt)
-  - [GET Image-Only Receipts by User ID](#endpoint-get-image-only-receipts-by-userid)
-  - [GET Image-Only Receipt by Receipt ID](#endpoint-get-an-image-only-receipt-by-id)
-  - [GET Receipt Image by Receipt ID](#endpoint-get-receipt-image-image-only)
+## Definitions of Resources
 
-### Definitions of Resources
+Term|Definition
+---|---
+eReceipt|A schema-enforced resource with data and, optionally, an image. If an image is not provided, one will be generated from the data resource.
+Image-Only Receipt|A standalone image without data.
 
-- *__eReceipt__* - A schema-enforced resource with data and, optionally, an image. If an image is not provided, one will be generated from the data resource.
-- *__Image-Only Receipt__* - A standalone image without data.
+## General
 
-### General
-
-|Endpoint|Response Format|Request Summary|
-|---|---|---|
-|[GET /](#endpoint-service-index)|JSON|Get service index URLs|
-|[GET /v4/status/:receiptId](#endpoint-get-receipt-status)|JSON|Get the status of a receipt|
-
-##### Endpoint: Service Index
-
-###### _GET /_
+## Service Index
 
 Making a GET request to the root of the service will return a list of current endpoints. If endpoint URLs ever change, the service index will be updated. To ensure that you are using the correct URLs, the safest practice is to check the service index before every request. The response will include current URLs for all endpoints in the receipt service.
 
-_Example Requests:_
+### Example
 
-cURL:
-
-```shell
-curl -H "Authorization: Bearer {YOUR ACCESS TOKEN}" https://us.api.concursolutions.com/receipts/
-```
-
-HTTPie:
+#### Request
 
 ```shell
-http https://us.api.concursolutions.com/receipts/ 'Authorization:Bearer {YOUR ACCESS TOKEN}'
+GET https://us.api.concursolutions.com/receipts/
+Authorization: Bearer {token}
 ```
 
-_Example Response:_
+#### Response
 
 ```json
 {
@@ -85,8 +73,6 @@ _Example Response:_
   ]
 }
 ```
-
-[Back to Top](#endpoints)
 
 ### eReceipts
 
@@ -234,8 +220,6 @@ _Example Response:_
 }
 ```
 
-[Back to Top](#endpoints)
-
 ##### Endpoint: Get Receipt Status
 
 ###### GET /v4/status/:receiptId
@@ -309,8 +293,6 @@ _Example Response:_
 }
 ```
 
-[Back to Top](#endpoints)
-
 ##### Endpoint: Post a Receipt
 
 ###### _POST /v4/users/:userId_
@@ -371,8 +353,6 @@ Location: https://us.api.concursolutions.com/receipts/v4/b0a4ab2bce8a49a08cf177c
 Content-Length: 0
 Connection: keep-alive
 ```
-
-[Back to Top](#endpoints)
 
 ##### Endpoint: Get a Receipt by ID
 
@@ -520,9 +500,9 @@ http https://us.api.concursolutions.com/receipts/v4/{RECEIPT ID}/image "Authoriz
 |userId|required|The UUID of the user to whom the receipt image belongs.|
 |image|required|Image of the receipt.|
 
-- Image constraints
-  - Image size must not exceed 5MB
-  - Image must be one of the supported file types: image/png, image/jpg, image/jpeg, image/tiff, image/tif, image/gif, and application/pdf
+* Image constraints
+  * Image size must not exceed 5MB
+  * Image must be one of the supported file types: image/png, image/jpg, image/jpeg, image/tiff, image/tif, image/gif, and application/pdf
 
 Successful POST requests will receive a response of 202 Accepted. The Location header of the response contains a URL for your receipt image. Once the receipt has been processed, it can be retrieved at this URL. The Link header of the response contains a processing-status URL for your receipt image.
 
