@@ -13,7 +13,7 @@ jobs:
       - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
       - run: sudo cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
       - run: rm -f concur/developer.concur.com/.rvmrc; echo 2.2.5 > concur/developer.concur.com/.ruby-version; rvm use 2.2.5 --default
-      - run: chmod -R 777 home/ubuntu/
+      - run: chmod -R 777 /home/ubuntu/
       - restore_cache:
           keys:
           - devcenter-deps-{{ .Branch }}-
