@@ -1,0 +1,78 @@
+version: 2
+jobs:
+  build_test:
+    working_directory: ~/concur/developer.concur.com
+    parallelism: 1
+    shell: /bin/bash --login
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+    docker:
+    - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
+      command: /sbin/init
+    steps:
+      - checkout
+      - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
+      - run: sudo cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+      - run: rm -f concur/developer.concur.com/.rvmrc; echo 2.2.5 > concur/developer.concur.com/.ruby-version; rvm use 2.2.5 --default
+      - restore_cache:
+          keys:
+          - devcenter-deps-{{ .Branch }}-
+          - devcenter-deps-preview-
+          - devcenter-deps-
+      - run: ./build/install_aws_cli.sh
+      - run: bundle install
+      - save_cache:
+          key: devcenter-deps-{{ .Branch }}-{{ epoch }}
+          paths:
+          - vendor/bundle
+          - ~/virtualenvs
+          - ~/.m2
+          - ~/.ivy2
+          - ~/.bundle
+          - ~/.go_workspace
+          - ~/.gradle
+          - ~/.cache/bower
+      - run: ./build/write_branch.sh
+      - run: ./build/write_commit.sh
+      - run: ./build/write_forms.sh
+      - run: bundle exec jekyll build
+      - store_test_results:
+          path: /tmp/circleci-test-results
+      - store_artifacts:
+          path: /tmp/circleci-artifacts
+      - store_artifacts:
+          path: /tmp/circleci-test-results
+
+  deploy_preview:
+    working_directory: ~/concur/developer.concur.com
+    docker:
+      - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
+    steps:
+      - run: ./build/install_aws_cli.sh
+      - run: aws s3 sync ./_site s3://preview-developer-concur-com --delete --region us-west-2 --output text
+  deploy_livesite:
+    working_directory: ~/concur/developer.concur.com
+    docker:
+      - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
+    steps:
+      - run: ./build/install_aws_cli.sh
+      - run: aws s3 sync ./_site s3://livesite-developer-concur-com --delete --region us-west-2 --output text
+
+workflows:
+  version: 2
+  build_test_deploy:
+      jobs:
+        - build_test
+        - deploy_preview:
+            filters:
+              branches:
+                only: preview
+            requires:
+              - build_test
+        - deploy_livesite:
+            filters:
+              branches:
+                only: livesite
+            requires:
+              - build_test
