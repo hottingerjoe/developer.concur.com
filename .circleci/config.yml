@@ -1,19 +1,20 @@
 version: 2
 jobs:
   build_test:
-    machine: true
     working_directory: ~/concur/developer.concur.com
     parallelism: 1
     shell: /bin/bash --login
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
       CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+    docker:
+    - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
+      command: /sbin/init
     steps:
       - checkout
       - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
       - run: sudo cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
       - run: rm -f concur/developer.concur.com/.rvmrc; echo 2.2.5 > concur/developer.concur.com/.ruby-version; rvm use 2.2.5 --default
-      - run: chmod -R 777 /home/ubuntu/
       - restore_cache:
           keys:
           - devcenter-deps-{{ .Branch }}-
@@ -40,14 +41,16 @@ jobs:
           path: /tmp/circleci-test-results
 
   deploy_preview:
-    machine: true
     working_directory: ~/concur/developer.concur.com
+    docker:
+      - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
     steps:
       - run: ./build/install_aws_cli.sh
       - run: aws s3 sync ./_site s3://preview-developer-concur-com --delete --region us-west-2 --output text
   deploy_livesite:
-    machine: true
     working_directory: ~/concur/developer.concur.com
+    docker:
+      - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
     steps:
       - run: ./build/install_aws_cli.sh
       - run: aws s3 sync ./_site s3://livesite-developer-concur-com --delete --region us-west-2 --output text
@@ -57,6 +60,12 @@ workflows:
   build_test_deploy:
       jobs:
         - build_test
+            filters:
+              branches:
+                only: 
+                  - preview
+                  - livesite
+                  - feature/circle-2.0 # NOTE: Remove after Circle 2.0 testing is complete.
         - deploy_preview:
             filters:
               branches:
